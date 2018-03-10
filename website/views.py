@@ -3,24 +3,25 @@ from __future__ import unicode_literals
 
 import json
 import ast
+import io
+import os
 
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.core.cache import cache
 from django.contrib import messages
 from collections import OrderedDict
+from django.conf import settings
 
 from pyexcel_ods import get_data, save_data
 
 from website.forms import UploadFileForm
-from website.utils import path_file_save
+from website.utils import path_file_save, get_session_key
 
 
 def index(request):
     # TODO: delete cache and file with prefix session_key
-    if not request.session.session_key:
-        request.session.save()
-    session_key = request.session.session_key
+    session_key = get_session_key(request)
 
     form = UploadFileForm(files=request.FILES or None)
     if form.is_valid():
@@ -31,9 +32,7 @@ def index(request):
 
 
 def show_ods(request):
-    if not request.session.session_key:
-        request.session.save()
-    session_key = request.session.session_key
+    session_key = get_session_key(request)
 
     count = cache.get(session_key)
     if count:
@@ -57,7 +56,7 @@ def show_ods(request):
 
 
 def save_ods(request):
-    session_key = request.session.session_key
+    session_key = get_session_key(request)
     count = cache.get(session_key)
     ods_data = request.GET
 
@@ -80,3 +79,28 @@ def save_ods(request):
 
     cache.set(session_key, count)
     return JsonResponse(new_sheet)
+
+
+def download(request):
+    session_key = get_session_key(request)
+    count = cache.get(session_key)
+
+    if count:
+        data = get_data(path_file_save(session_key, count))
+    else:
+        data = get_data(path_file_save(session_key))
+
+    # name = 'test'
+    # TODO: custom filne name when download
+    if count:
+        path = path_file_save(session_key, count)
+    else:
+        path = path_file_save(session_key)
+
+    file_path = os.path.join(settings.BASE_DIR, path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/ods")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
