@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %} Ngods {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Basic Page</h4>
+        <p>
+            Click cells to edit them, use keyboard navigation (TAB, Shift+Tab, Up/Down Arrows), and try out the buttons below.
+        </p>
+    </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+        <table id="table-edit" class='table table-bordered table-striped'></table>
+
+        <div style='margin-top: 20px;'>
+            <button class='reset btn btn-primary' type="button" >Reset</button>
+            <button class='save btn btn-primary' type="button" >Save {{ table }}</button>
+            <button class='log btn btn-primary' type="button" >Console.log</button>
+            <button class='addrow btn btn-primary' type="button" >Add Row</button>
+            <button class='removerow btn btn-primary' type="button" >Remove Last Row</button>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    $(document).ready(function() {
+        $.get("{% url 'website:show_ods' %}")
+        .done(function( data ) {
+            console.log(data)
+            $("#table-edit")
+                .editTable()
+                .editTable('rows', data);
+
+        })
+        .fail(function() {
+            alert("error");
+        });
+    });
+
+    var actionButton = function() {
+        var table = $('#table-edit');
+
+        // Store the original data so we can restore it later
+        var orig = table.editTable('rows');
+        $(".reset", $(this)).on('click', function() {
+            table.editTable('rows', orig);
+        });
+
+        // Prints out the table's current value as an array of JSON objects
+        $(".log", $(this)).on('click', function() {
+            console.log(JSON.stringify(table.editTable('rows'), null, 2));
+        });
+
+        $(".save", $(this)).on('click', function() {
+            $.get( "{% url 'website:save_ods' %}", JSON.stringify(table.editTable('rows'), null, 2))
+            .done(function( data ) {
+                console.log(data);
+            })
+            .fail(function() {
+                alert("error");
+            });
+        });
+
+        // Adds a row to the bottom of the table
+        $(".addrow", $(this)).on('click', function() {
+            table.editTable('add');
+        });
+
+        // Removes the last row of the table
+        $(".removerow",$(this)).on('click', function() {
+            table.editTable('remove');
+        });
+    }
+</script>
+
+
+
+{% endblock %}
