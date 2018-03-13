@@ -86,21 +86,18 @@ def download(request):
     count = cache.get(session_key)
 
     if count:
-        data = get_data(path_file_save(session_key, count))
-    else:
-        data = get_data(path_file_save(session_key))
-
-    # name = 'test'
-    # TODO: custom filne name when download
-    if count:
         path = path_file_save(session_key, count)
     else:
         path = path_file_save(session_key)
+
+    filename = request.GET.get('filename', '')
+    if not filename:
+        filename = 'ngods'
 
     file_path = os.path.join(settings.BASE_DIR, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/ods")
-            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            response['Content-Disposition'] = 'inline; filename=' + f'{filename}.ods'
             return response
     raise Http404

@@ -4,9 +4,9 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h4>Basic Page</h4>
+        <h4>Cara menggunakan</h4>
         <p>
-            Click cells to edit them, use keyboard navigation (TAB, Shift+Tab, Up/Down Arrows), and try out the buttons below.
+            Klik sel untuk mengeditnya, gunakan navigasi keyboard (TAB, Shift + Tab, Panah Atas / Bawah), dan cobalah tombol di bawah ini.
         </p>
     </div>
 </div>
@@ -22,19 +22,51 @@
     <div class="tab-content">
         {% for table, data in sheets.items %}
             <div role="tabpanel" class="tab-pane sheet" id="{{ table }}">
+                <!-- row button and table -->
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="list-group">
+                            <button class='reset list-group-item' type="button" >Setel ulang</button>
+                            <button class='save list-group-item' type="button" >Simpan</button>
+                            <button class='log list-group-item' type="button" >Log</button>
+                            <button class='addrow list-group-item' type="button" >Tambah Baris</button>
+                            <button class='removerow list-group-item' type="button" >Hapus Baris</button>
+                            <button class="btn list-group-item" data-toggle="modal" data-target="#Modal-{{ table }}">Unduh</button>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
+                    </div>
+                </div>
 
-                <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
+                <!-- Modal -->
+                <div class="modal fade" id="Modal-{{ table }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <form action="{% url 'website:download' %}" method="GET">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="control-label">Nama berkas:</label>
+                                        <input type="text" class="form-control" name="filename" placeholder="ngods">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Unduh</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-                <div style='margin-top: 20px;'>
-                    <button class='reset btn btn-primary' type="button" >Reset</button>
-                    <button class='save btn btn-primary' type="button" >Save {{ table }}</button>
-                    <button class='log btn btn-primary' type="button" >Console.log</button>
-                    <button class='addrow btn btn-primary' type="button" >Add Row</button>
-                    <button class='removerow btn btn-primary' type="button" >Remove Last Row</button>
-                    <a href="{% url 'website:download' %}" class='download btn btn-primary' >Download</a>
                 </div>
             </div>
         {% endfor %}
+        <!-- Button trigger modal -->
+
     </div>
   </div>
 </div>
@@ -82,6 +114,7 @@
                 $.get( "{% url 'website:save_ods' %}", dataTable)
                 .done(function( data ) {
                     console.log(data);
+                    alert("berhasil disimpan")
                 })
                 .fail(function() {
                     alert("error");
@@ -94,7 +127,7 @@
             });
 
             // Removes the last row of the table
-            $(".removerow",$(this)).on('click', function() {
+            $(".removerow", $(this)).on('click', function() {
                 table.editTable('remove');
             });
         });
