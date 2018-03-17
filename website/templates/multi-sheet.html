@@ -1,21 +1,35 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
 {% block title %} Ngods {% endblock %}
-{% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h4>Cara menggunakan</h4>
-        <p>
-            Klik sel untuk mengeditnya, gunakan navigasi keyboard (TAB, Shift + Tab, Panah Atas / Bawah), dan cobalah tombol di bawah ini.
-        </p>
+
+{% block header %}
+<header class="masthead masthead-100 text-center text-white d-flex">
+    <div class="container my-auto">
+        <div class="row">
+        </div>
     </div>
-</div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section id="show">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Cara menggunakan</h4>
+                <p>
+                    Klik sel untuk mengeditnya, gunakan navigasi keyboard (TAB, Shift + Tab, Panah Atas / Bawah), dan cobalah tombol di bawah ini.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 <div class="row">
   <div class="col-lg-12">
 
     <ul class="nav nav-tabs" role="tablist" id="tabSheet">
         {% for table, data in sheets.items %}
-            <li role="presentation"><a href="#{{ table }}" aria-controls="{{ table }}" role="tab" data-toggle="tab">{{ table }}</a></li>
+            <li role="presentation"><a href="#{{ table }}" aria-controls="{{ table }}" role="tab" data-toggle="tab">{% comment %} {{ table }} {% endcomment %}</a></li>
         {% endfor %}
     </ul>
 
@@ -24,6 +38,9 @@
             <div role="tabpanel" class="tab-pane sheet" id="{{ table }}">
                 <!-- row button and table -->
                 <div class="row">
+                    <div class="col-md-10">
+                        <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
+                    </div>
                     <div class="col-md-2">
                         <div class="list-group">
                             <button class='reset list-group-item' type="button" >Setel ulang</button>
@@ -31,11 +48,8 @@
                             <button class='log list-group-item' type="button" >Log</button>
                             <button class='addrow list-group-item' type="button" >Tambah Baris</button>
                             <button class='removerow list-group-item' type="button" >Hapus Baris</button>
-                            <button class="btn list-group-item" data-toggle="modal" data-target="#Modal-{{ table }}">Unduh</button>
+                            <button class="download list-group-item" data-toggle="modal" data-target="#Modal-{{ table }}">Unduh</button>
                         </div>
-                    </div>
-                    <div class="col-md-10">
-                        <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
                     </div>
                 </div>
 

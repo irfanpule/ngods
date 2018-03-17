@@ -1,15 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
 {% block title %} Welcome to Ngods {% endblock %}
-{% block content %}
-<div class="row">
-  <div class="col-md-12" style="margin-top: 15%">
-    <h4>Basic Page</h4>
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form }}
-      <button type="submit" class="btn btn-primary">Open</button>
-    </form>
-  </div>
-</div>
+
+{% block header %}
+<header class="masthead text-center text-white d-flex">
+    <div class="container my-auto">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <h1 class="text-uppercase">
+            <strong>Ngods - Penyunting berkas ODS sederhana</strong>
+          </h1>
+          <hr>
+        </div>
+        <div class="col-lg-8 mx-auto">
+          <p class="text-faded mb-5">Ayo mulai sunting berkas ODS anda dengan cara menunggah berkas.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary btn-xl js-scroll-trigger">Buka</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
 {% endblock %}

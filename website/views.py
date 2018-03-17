@@ -41,7 +41,7 @@ def show_ods(request):
         data = get_data(path_file_save(session_key))
 
     if len(data) > 1:
-        messages.warning(request, 'Sorry, Ngods not support multy sheet')
+        messages.warning(request, 'Maaf, Ngods belum mendukung multi sheet')
         return redirect('website:index')
     if not data:
         return redirect('website:index')
