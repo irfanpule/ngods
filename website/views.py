@@ -20,8 +20,12 @@ from website.utils import path_file_save, get_session_key
 
 
 def index(request):
-    # TODO: delete cache and file with prefix session_key
     session_key = get_session_key(request)
+
+    count = cache.get(session_key)
+    if count:
+        cache.delete(session_key)
+        os.system(f'rm -rf tmp/{session_key}-*.ods')
 
     form = UploadFileForm(files=request.FILES or None)
     if form.is_valid():
@@ -32,6 +36,7 @@ def index(request):
 
 
 def show_ods(request):
+    # TODO: fix styling when click cell
     session_key = get_session_key(request)
 
     count = cache.get(session_key)
