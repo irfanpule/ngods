@@ -17,5 +17,5 @@ logs/*
 
 *.sqlite3
 
-tmp/*
+tmp/*.ods
 *.ods
