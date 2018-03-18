@@ -21,9 +21,7 @@ from website.utils import path_file_save, get_session_key
 
 def index(request):
     session_key = get_session_key(request)
-
-    count = cache.get(session_key)
-    if count:
+    if cache.get(session_key):
         cache.delete(session_key)
         os.system(f'rm -rf tmp/{session_key}-*.ods')
 
@@ -36,14 +34,12 @@ def index(request):
 
 
 def show_ods(request):
-    # TODO: fix styling when click cell
     session_key = get_session_key(request)
 
-    count = cache.get(session_key)
-    if count:
-        data = get_data(path_file_save(session_key, count))
-    else:
+    try:
         data = get_data(path_file_save(session_key))
+    except FileNotFoundError:
+        return redirect('website:index')
 
     if len(data) > 1:
         messages.warning(request, 'Maaf, Ngods belum mendukung multi sheet')
@@ -77,10 +73,11 @@ def save_ods(request):
 
     if count:
         count = int(count) + 1
-        save_data(path_file_save(session_key, count), new_sheet)
     else:
         count = 1
-        save_data(path_file_save(session_key, count), new_sheet)
+
+    os.system(f'mv {path_file_save(session_key)} {path_file_save(session_key, count)}')
+    save_data(path_file_save(session_key), new_sheet)
 
     cache.set(session_key, count)
     return JsonResponse(new_sheet)
@@ -88,12 +85,7 @@ def save_ods(request):
 
 def download(request):
     session_key = get_session_key(request)
-    count = cache.get(session_key)
-
-    if count:
-        path = path_file_save(session_key, count)
-    else:
-        path = path_file_save(session_key)
+    path = path_file_save(session_key)
 
     filename = request.GET.get('filename', '')
     if not filename:
