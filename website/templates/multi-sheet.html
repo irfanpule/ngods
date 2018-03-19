@@ -24,34 +24,31 @@
         </div>
     </div>
 </section>
-<div class="row">
-  <div class="col-lg-12">
 
-    <ul class="nav nav-tabs" role="tablist" id="tabSheet">
-        {% for table, data in sheets.items %}
-            <li role="presentation"><a href="#{{ table }}" aria-controls="{{ table }}" role="tab" data-toggle="tab">{% comment %} {{ table }} {% endcomment %}</a></li>
-        {% endfor %}
-    </ul>
+<section id="show">
+    <div class="container">
+        <div class="tab-content">
 
-    <div class="tab-content">
-        {% for table, data in sheets.items %}
+            {% for table, data in sheets.items %}
             <div role="tabpanel" class="tab-pane sheet" id="{{ table }}">
-                <!-- row button and table -->
-                <div class="row">
-                    <div class="col-md-10">
-                        <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="list-group">
-                            <button class='reset list-group-item' type="button" >Setel ulang</button>
-                            <button class='save list-group-item' type="button" >Simpan</button>
-                            <button class='log list-group-item' type="button" >Log</button>
-                            <button class='addrow list-group-item' type="button" >Tambah Baris</button>
-                            <button class='removerow list-group-item' type="button" >Hapus Baris</button>
-                            <button class="download list-group-item" data-toggle="modal" data-target="#Modal-{{ table }}">Unduh</button>
-                        </div>
-                    </div>
+                <div class="btn-group align-left" role="group">
+                    <button class='reset list-group-item' type="button"><i class="fa fa-undo"></i> Setel ulang</button>
+                    <!-- <button class='log list-group-item' type="button" >Log</button> -->
+                    <button class='addrow list-group-item' type="button"><i class="fa fa-plus"></i> Tambah Baris</button>
+                    <button class='removerow list-group-item' type="button"><i class="fa fa-minus"></i> Hapus Baris</button>
+                    <button class='save list-group-item' type="button" ><i class="fa fa-save"></i> Simpan</button>
+                    <button class="download list-group-item" data-toggle="modal" data-target="#Modal-{{ table }}">
+                        <i class="fa fa-download"></i> Unduh
+                    </button    >
                 </div>
+
+                <!-- row button and table -->
+                <ul class="nav nav-tabs" role="tablist" id="tabSheet">
+                    {% for table, data in sheets.items %}
+                        <li role="presentation"><a href="#{{ table }}" aria-controls="{{ table }}" role="tab" data-toggle="tab">{% comment %} {{ table }} {% endcomment %}</a></li>
+                    {% endfor %}
+                </ul>
+                <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
 
                 <!-- Modal -->
                 <div class="modal fade" id="Modal-{{ table }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -75,15 +72,13 @@
                             </form>
                         </div>
                     </div>
-
-                </div>
-            </div>
+                </div> <!-- Modal -->
+            </div> <!-- Tab Panel -->
         {% endfor %}
-        <!-- Button trigger modal -->
 
+        </div> <!-- Tab Content -->
     </div>
-  </div>
-</div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
