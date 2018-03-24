@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import index, show_ods, save_ods, download
+from .views import index, show_ods, save_ods, download, demo
 
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^show/$', show_ods, name='show_ods'),
     url(r'^save/$', save_ods, name='save_ods'),
     url(r'^download/$', download, name='download'),
+    url(r'^demo/$', demo, name='demo'),
 ]

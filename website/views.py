@@ -12,6 +12,7 @@ from django.core.cache import cache
 from django.contrib import messages
 from collections import OrderedDict
 from django.conf import settings
+from django.core.files import File
 
 from pyexcel_ods import get_data, save_data
 
@@ -98,3 +99,14 @@ def download(request):
             response['Content-Disposition'] = 'inline; filename=' + f'{filename}.ods'
             return response
     raise Http404
+
+
+def demo(request):
+    session_key = get_session_key(request)
+    if cache.get(session_key):
+        cache.delete(session_key)
+        os.system(f'rm -rf tmp/{session_key}-*.ods')
+
+    ods_file = settings.STATIC_ROOT + '/demo.ods'
+    save_data(path_file_save(session_key), get_data(ods_file))
+    return redirect('website:show_ods')
