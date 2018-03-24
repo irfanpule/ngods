@@ -48,7 +48,9 @@
                         <li role="presentation"><a href="#{{ table }}" aria-controls="{{ table }}" role="tab" data-toggle="tab">{% comment %} {{ table }} {% endcomment %}</a></li>
                     {% endfor %}
                 </ul>
-                <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
+                <div class="table-responsive">
+                    <table id="table-{{ table }}" data-table-name="{{ table }}" class='table table-bordered table-striped'></table>
+                </div>
 
                 <!-- Modal -->
                 <div class="modal fade" id="Modal-{{ table }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
